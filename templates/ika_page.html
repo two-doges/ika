@@ -1,0 +1,27 @@
+{% extends "frame.html" %}
+{% block title %}
+Ika institute
+{% endblock %}
+{% block content %}
+<form action="/ika/" method="POST">
+    <input type="hidden" name="forward_id" value="{{ ika_id }}">
+    <input class="form-control" name="name" type="text" placeholder="Name">
+    <input class="form-control" name="comment" type="text" placeholder="说些什么?">
+    <button class="btn btn-primary" type="submit">发布</button>
+</form>
+{% for ika in ikas %}
+<div class="card" id="{{ ika.ika_id }}">
+    <div class="card-body">
+        <h5 class="card-title ika-id"> #{{ ika.ika_id }}</h5>
+        <h6 class="card-subtitle text-muted">{{ ika.poster_name }} #{{ ika.poster_id }} 发表于{{ ika.post_time }}</h6>
+        <p class="card text">{{ ika.comment }}</p>
+    </div>
+</div>
+{% endfor %}
+{% if page > 0 %}
+<a class="btn btn-primary" href="/ika/{{ ika_id }}?page={{ page-1 }}">上一页</a>
+{% else %}
+<a class="btn btn-primary disable" aria-disabled="true" href="#">上一页</a>
+{% endif %}
+<a class="btn btn-primary" href="/ika/{{ ika_id }}?page={{ page+1 }}">下一页</a>
+{% endblock %}
