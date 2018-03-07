@@ -1,11 +1,17 @@
 import pymysql
 import time
+import config
 from cla import Ika
+
+
+def linkdata():
+    conn = pymysql.connect(config.address, config.user, config.password, 'ikadata')
+    return conn
 
 
 def query_by_id(id):
     id = int(id)
-    conn = pymysql.connect('localhost','root','123456','ikadata')
+    conn = linkdata()
     cur = conn.cursor()
     cur.execute('select * from ikas where ikaid = "%d";' % (id))
     re = cur.fetchall()
@@ -15,7 +21,7 @@ def query_by_id(id):
 
 
 def add_ika(ik):
-    conn = pymysql.connect('localhost', 'root', '123456', 'ikadata')
+    conn = linkdata()
     cur = conn.cursor()
     sql = 'insert into ikas values(0,"%s","%s","%s","%s","%s")' % (ik.forward_ika,
      ik.post_time, ik.poster_id, ik.poster_name, ik.comment)
@@ -31,7 +37,7 @@ def query_more(fa, be, en):
     if(en<=be):
         return None
     en = min(be + maxsize + 1, en)
-    conn = pymysql.connect('localhost', 'root', '123456', 'ikadata')
+    conn = linkdata()
     cur = conn.cursor()
     ans = []
     if be == 1:
@@ -54,7 +60,7 @@ def query_more(fa, be, en):
 
 def ins_ika(fid, pid, pna, com):
     stri = 'insert into ikas values(0,"%s",'+time.strftime("%Y%m%d%H%M%s", time.localtime())+',"%s","%s","%s")'
-    conn = pymysql.connect('localhost', 'root', '123456', 'ikadata')
+    conn = linkdata()
     cur = conn.cursor()
     cur.execute(stri, (fid, pid, pna, com))
     conn.commit()
