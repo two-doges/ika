@@ -30,6 +30,8 @@ def ika_post():
     forward_id = flask.request.form['forward_id']
     poster_name = flask.request.form['name']
     comment = flask.request.form['comment']
+    if not comment:
+        return render('post_error.html', error='请输入内容')
     end_point.new_ika(forward_id, user_id, poster_name, comment)
     res = flask.make_response(render('post_success.html'))
     res.set_cookie('user_id', str(user_id))
