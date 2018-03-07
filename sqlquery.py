@@ -40,7 +40,7 @@ def query_more(fa, be, en):
     conn = linkdata()
     cur = conn.cursor()
     ans = []
-    if be == 1:
+    if be == 1 and fa > 0:
         be += 1
         stri = 'select * from ikas where ikaid="%s"'%(fa)
         cur.execute(stri)
