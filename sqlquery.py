@@ -23,7 +23,7 @@ def query_by_id(id):
 def add_ika(ik):
     conn = linkdata()
     cur = conn.cursor()
-    sql = 'insert into ikas values(0,"%s","%s","%s","%s","%s")' % (ik.forward_ika,
+    sql = 'insert into ikas values(0,%s,%s,%s,%s,%s)' % (ik.forward_ika,
      ik.post_time, ik.poster_id, ik.poster_name, ik.comment)
     cur.execute(sql)
     conn.commit()
@@ -33,6 +33,8 @@ def add_ika(ik):
 
 def query_more(fa, be, en):
     fa = int(fa)
+    be = int(be)
+    en = int(en)
     maxsize = 100
     if(en<=be):
         return None
@@ -61,18 +63,13 @@ def query_more(fa, be, en):
 
 
 def ins_ika(fid, pid, pna, com):
-    stri = 'insert into ikas values(0,"%s",'+time.strftime("%Y%m%d%H%M%s", time.localtime())+',"%s","%s","%s")'
+    stri = 'insert into ikas values(0,%s,'+time.strftime("%Y%m%d%H%M%S", time.localtime())+',%s,%s,%s)'
     conn = linkdata()
     cur = conn.cursor()
-    cur.execute(stri, (fid, pid, pna, com))
+    cur.execute(stri, (fid, int(pid), pna, com))
     conn.commit()
     cur.close()
     conn.close()
-
-
-def ika_show(ik):
-    print(str(ik.ika_id)+' '+str(ik.forward_ika)+' '+str(ik.post_time)+' '+str(ik.poster_id)+
-    ' '+str(ik.poster_name)+' '+str(ik.comment))
 
 
 if __name__ == '__main__':

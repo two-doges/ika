@@ -14,5 +14,11 @@ class Ika():
         self.post_time = post_time
         self.poster_id = poster_id
         self.poster_name = poster_name
+        if len(poster_name) < 1:
+            self.poster_name = 'NaMe'
         self.comment = comment
         self.number = None
+
+    def show(self):
+        print(str(self.ika_id)+' '+str(self.forward_ika)+' '+str(self.post_time)+' '+str(self.poster_id)+
+        ' '+str(self.poster_name)+' '+str(self.comment))
