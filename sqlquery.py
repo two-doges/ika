@@ -1,6 +1,6 @@
 import pymysql
 import time
-from end_point import *
+from cla import Ika
 
 
 def query_by_id(id):
