@@ -3,8 +3,28 @@
 Ika institute
 {% endblock %}
 {% block content %}
-<p>
-    <h1>Ika institute</h1>
-    <p>这是一个匿名版,不需注册即可使用</p>
-</p>
+<div>
+    <form action="/ika/" method="POST">
+        <input type="hidden" name="forward_id" value="0">
+        <input class="form-control" name="name" type="text" placeholder="Name">
+        <input class="form-control" name="comment" type="text" placeholder="说些什么?">
+        <button class="btn btn-primary" type="submit">发布</button>
+    </form>
+</div>
+{% for ika in ikas %}
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title ika-id"> #{{ ika.ika_id }}</h5>
+        <h6 class="card-subtitle text-muted">{{ ika.poster_name }} #{{ ika.poster_id }} 发表于{{ ika.post_time }}</h6>
+        <p class="card text">{{ ika.comment }}</p>
+        <a class="btn btn-primary" href="/ika/{{ ika.ika_id }}">回应</a>
+    </div>
+</div>
+{% endfor %}
+{% if page > 0 %}
+<a class="btn btn-primary" href="/ika?page={{ page-1 }}">上一页</a>
+{% else %}
+<a class="btn btn-primary disable" aria-disabled="true" href="#">上一页</a>
+{% endif %}
+<a class="btn btn-primary" href="/ika?page={{ page+1 }}">下一页</a>
 {% endblock %}
