@@ -3,10 +3,11 @@ init the database,you should run it first .Don't run it twice.
 '''
 
 import pymysql
+import sqlquery
 
 
 def initDatabase():
-    conn = pymysql.connect('localhost','root','123456','ikadata')
+    conn = sqlquery.linkdata()
     cur = conn.cursor()
     cur.execute('''create table ikas
     (ikaid INT UNSIGNED AUTO_INCREMENT,
