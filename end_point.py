@@ -1,5 +1,7 @@
 from rando import getno
-from sqlquery import *
+from sqlquery import query_by_id
+from sqlquery import query_more
+from sqlquery import ins_ika
 
 
 class Ika():
@@ -53,4 +55,4 @@ def new_poster():
     return a unique id for each user
     return int
     '''
-    return getno()
+    return rando.getno()

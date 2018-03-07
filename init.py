@@ -11,10 +11,10 @@ def initDatabase():
     cur.execute('''create table ikas
     (ikaid INT UNSIGNED AUTO_INCREMENT,
     forward int unsigned,
-    time datetime,
+    time varchar(14),
     postid  bigint unsigned,
     name varchar(12),
-    comment varchar(116),
+    comment varchar(1012),
     primary key(ikaid))
     ENGINE=InnoDB DEFAULT charset=utf8;''')
     conn.close()

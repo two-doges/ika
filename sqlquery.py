@@ -53,12 +53,10 @@ def query_more(fa, be, en):
 
 
 def ins_ika(fid, pid, pna, com):
-    stri = 'insert into ikas values(0,"%s",cast(n\'%s\' as datetime),"%s","%s","%s")'
+    stri = 'insert into ikas values(0,"%s",'+time.strftime("%Y%m%d%H%M%s", time.localtime())+',"%s","%s","%s")'
     conn = pymysql.connect('localhost', 'root', '123456', 'ikadata')
-    print(stri%(fid,time.strftime("%Y-%m-%d %H:%M:%S.000",time.localtime()),pid,pna,com))
     cur = conn.cursor()
-    cur.execute(stri, (fid, time.strftime("%Y-%m-%d %H:%M:%S.000", time.localtime()), pid, pna, com))
-    print(stri%(fid, time.strftime("%Y-%m-%d %H:%M:%S.00", time.localtime()), pid, pna, com))
+    cur.execute(stri, (fid, pid, pna, com))
     conn.commit()
     cur.close()
     conn.close()
@@ -70,4 +68,9 @@ def ika_show(ik):
 
 
 if __name__ == '__main__':
-    ins_ika(1,2,'hello','balaa')
+    ins_ika(0,12,'bb','123')
+    ins_ika(1,11,'aa','456')
+    ins_ika(1,1,'sss','789')
+    re = query_more(1,2,3)
+    for i in re:
+        ika_show(i)
