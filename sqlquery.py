@@ -46,6 +46,8 @@ def query_more(fa, be, en):
         cur.execute(stri)
         re = cur.fetchall()
         ans.append(Ika(re[0][0], re[0][1], re[0][2], re[0][3], re[0][4], re[0][5]))
+    if be == 1:
+        be += 1
     stri = 'select * from ikas where forward="%s"'%(fa)
     cur.execute(stri)
     re = cur.fetchall()
