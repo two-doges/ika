@@ -3,17 +3,14 @@
 Ika institute
 {% endblock %}
 {% block content %}
-<div>
+<div class="container">
     <form action="/ika/" method="POST">
         <input type="hidden" name="forward_id" value="0">
         <input class="form-control" name="name" type="text" placeholder="Name">
-        <input class="form-control" name="comment" type="text" placeholder="说些什么?">
+        <textarea class="form-control" name="comment" rows="5" maxlength="1000" placeholder="说些什么?"></textarea>
         <button class="btn btn-primary" type="submit">发布</button>
     </form>
 </div>
-
-
-
 {% for ika in ikas %}
 <div class="card">
     <div class="card-body">

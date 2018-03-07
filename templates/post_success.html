@@ -2,6 +2,10 @@
 {% block title %}
 Ika institute
 {% endblock %}
+{% block scripts %}
+{{ super() }}
+<script src="{{url_for('static', filename='flash_back.js')}}"></script>
+{% endblock %}
 {% block content %}
 <p>发布成功</p>
 {% endblock %}
