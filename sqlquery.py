@@ -5,7 +5,7 @@ from cla import Ika
 
 
 def linkdata():
-    conn = pymysql.connect(config.address, config.user, config.password, 'ikadata')
+    conn = pymysql.connect(config.address, config.user, config.password, 'ikadata',charset='utf8')
     return conn
 
 
