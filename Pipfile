@@ -9,7 +9,10 @@ name = "pypi"
 
 flask = "*"
 pymysql = "*"
+"flask-bootstrap4" = "*"
 
 
 [dev-packages]
 
+neovim = "*"
+jedi = "*"
