@@ -1,7 +1,7 @@
 '''the front-end blueprint'''
 import flask
 from flask import render_template as render
-import end_point_test as end_point
+import end_point
 
 
 frontend = flask.Blueprint('frontend', __name__)
