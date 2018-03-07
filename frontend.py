@@ -17,6 +17,8 @@ def index():
 def ika_list():
     '''return the ika list under root'''
     page = int(flask.request.args.get('page', '0'))
+    if page < 0:
+        page = 0
     ikas = end_point.get_reply(0, page*20+1, page*20+21)
     return render('ika_list.html', ikas=ikas, page=page)
 
@@ -30,6 +32,8 @@ def ika_post():
     forward_id = flask.request.form['forward_id']
     poster_name = flask.request.form['name']
     comment = flask.request.form['comment']
+    if not comment:
+        return render('post_error.html', error='请输入内容')
     end_point.new_ika(forward_id, user_id, poster_name, comment)
     res = flask.make_response(render('post_success.html'))
     res.set_cookie('user_id', str(user_id))
@@ -40,5 +44,7 @@ def ika_post():
 def ika_page(ika_id):
     '''return the spec page of ika'''
     page = int(flask.request.args.get('page', '0'))
+    if page < 0:
+        page = 0
     ikas = end_point.get_reply(ika_id, page*20+1, page*20+21)
     return render('ika_page.html', ikas=ikas, page=page, ika_id=ika_id)
