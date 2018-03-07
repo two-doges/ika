@@ -17,6 +17,8 @@ def index():
 def ika_list():
     '''return the ika list under root'''
     page = int(flask.request.args.get('page', '0'))
+    if page < 0:
+        page = 0
     ikas = end_point.get_reply(0, page*20+1, page*20+21)
     return render('ika_list.html', ikas=ikas, page=page)
 
@@ -42,5 +44,7 @@ def ika_post():
 def ika_page(ika_id):
     '''return the spec page of ika'''
     page = int(flask.request.args.get('page', '0'))
+    if page < 0:
+        page = 0
     ikas = end_point.get_reply(ika_id, page*20+1, page*20+21)
     return render('ika_page.html', ikas=ikas, page=page, ika_id=ika_id)
