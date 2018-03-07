@@ -11,15 +11,23 @@ def linkdata():
 
 def query_by_id(id):
     id = int(id)
-    conn = linkdata()
+    conn = linkdata(name)
     cur = conn.cursor()
     cur.execute('select * from ikas where ikaid = "%d";' % (id))
     re = cur.fetchall()
+    cnt = 1
+    if not re:
+        return None
+    if re[0][1] == 0:
+        cur.execute('select * from cnts where ikaid = "%d";' %(id))
+        cc = cur.fetchall()
+        cnt = int(cc[0][1])
     cur.close()
     conn.close()
-    return Ika(re[0][0], re[0][1], re[0][2], re[0][3], re[0][4], re[0][5])
+    return Ika(*re[0], cnt)
 
 
+'''
 def add_ika(ik):
     conn = linkdata()
     cur = conn.cursor()
@@ -29,6 +37,7 @@ def add_ika(ik):
     conn.commit()
     cur.close()
     conn.close()
+'''
 
 
 def query_more(fa, be, en):
@@ -47,9 +56,7 @@ def query_more(fa, be, en):
         stri = 'select * from ikas where ikaid="%s"'%(fa)
         cur.execute(stri)
         re = cur.fetchall()
-        ans.append(Ika(re[0][0], re[0][1], re[0][2], re[0][3], re[0][4], re[0][5]))
-    if be == 1:
-        be += 1
+        ans.append(Ika(*re[0]))
     stri = 'select * from ikas where forward="%s"'%(fa)
     cur.execute(stri)
     re = cur.fetchall()
@@ -57,17 +64,49 @@ def query_more(fa, be, en):
         return ans
     cur.close()
     conn.close()
-    for i in range(be-2,min(len(re),en-1)):
-        ans.append(Ika(re[i][0], re[i][1], re[i][2], re[i][3], re[i][4], re[i][5]))
+    no = 2
+    ll = len(re)
+    if fa == 0:
+        no = 1
+        reversed(re)
+    #print("!!!!!"+str(fa))
+    for i in range(be-no,min(ll,en-1)):
+        ans.append(Ika(*re[i]))
     return ans
 
 
 def ins_ika(fid, pid, pna, com):
-    stri = 'insert into ikas values(0,%s,'+time.strftime("%Y%m%d%H%M%S", time.localtime())+',%s,%s,%s)'
     conn = linkdata()
     cur = conn.cursor()
+    fid = int(fid)
+    if fid < 0:
+        return
+    elif fid > 0:
+        cur.execute('select * from cnts where ikaid = "%s"'%(fid))
+        res = cur.fetchall()
+        #print (fid)
+        #print(res)
+        if not res:
+            return
+    stri = 'insert into ikas values(0,%s,'+time.strftime("%Y%m%d%H%M%S", time.localtime())+',%s,%s,%s)'
     cur.execute(stri, (fid, int(pid), pna, com))
     conn.commit()
+    cur.execute('select last_insert_id();')
+    re = cur.fetchall()
+    no = fid
+    if no == 0:
+        no = int(re[0][0])
+        #print('?????')
+        cur.execute('insert into cnts values("%s",1)'%(no))
+        conn.commit()
+    else:
+        cur.execute('select * from cnts where ikaid = "%s" for update'%(no))
+        nu = cur.fetchall()
+        nu = int(nu[0][1])
+        nu += 1
+        cur.execute('update cnts set ikaid = "%s",number = "%s" where ikaid = "%s"'
+        %(no, nu, no))
+        conn.commit()
     cur.close()
     conn.close()
 
