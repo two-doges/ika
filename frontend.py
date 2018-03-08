@@ -17,12 +17,12 @@ def index():
 @frontend.route('/ika/', methods=['GET'])
 def ika_list():
     '''return the ika list under root'''
-    target_ika = end_point.get_ika(0)
+    ika_number = end_point.get_ika_number()
     # set the max page
-    if target_ika.number == 0:
+    if ika_number == 0:
         max_page = 0
     else:
-        max_page = (target_ika.number-1) // 20
+        max_page = (ika_number-1) // 20
     # page range is [0, (target_ika.number-1)/20]
     page = int(flask.request.args.get('page', '0'))
     if page < 0:

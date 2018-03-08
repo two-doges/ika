@@ -9,17 +9,25 @@ def linkdata():
     return conn
 
 
-def query_by_id(id):
-    id = int(id)
-    conn = linkdata(name)
+def get_total():
+    conn = linkdata()
     cur = conn.cursor()
-    cur.execute('select * from ikas where ikaid = "%d";' % (id))
+    cur.execute('select count(*) from cnts;')
+    re = cur.fetchall()
+    return int(re[0][0])
+
+
+def query_by_id(idd):
+    idd = int(idd)
+    conn = linkdata()
+    cur = conn.cursor()
+    cur.execute('select * from ikas where ikaid = "%d";' % (idd))
     re = cur.fetchall()
     cnt = 1
     if not re:
         return None
     if re[0][1] == 0:
-        cur.execute('select * from cnts where ikaid = "%d";' %(id))
+        cur.execute('select * from cnts where ikaid = "%d";' %(idd))
         cc = cur.fetchall()
         cnt = int(cc[0][1])
     cur.close()
