@@ -9,7 +9,12 @@ import sqlquery
 def initDatabase():
     conn = sqlquery.linkdata()
     cur = conn.cursor()
-    cur.execute('''create table ikas
+    cur.execute('''create table if not exists cnts
+    (ikaid int unsigned,
+    number int unsigned,
+    primary key(ikaid))
+    ENGINE=InnoDB DEFAULT charset=utf8;''')
+    cur.execute('''create table if not exists ikas
     (ikaid INT UNSIGNED AUTO_INCREMENT,
     forward int unsigned,
     time varchar(14),
