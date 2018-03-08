@@ -69,7 +69,7 @@ def query_more(fa, be, en):
         for i in range(ll-be, ll-en, -1):
             ans.append(Ika(*re[i][:6]))
     else:
-        for i in range(be-no, min(ll, en-1)):
+        for i in range(be-no, min(ll, en-2)):
             ans.append(Ika(*re[i][:6]))
     return ans
 
