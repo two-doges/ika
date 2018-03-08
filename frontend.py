@@ -1,6 +1,7 @@
 '''the front-end blueprint'''
 import flask
 from flask import render_template as render
+from flask import url_for, redirect
 import end_point
 
 
@@ -16,7 +17,18 @@ def index():
 @frontend.route('/ika/', methods=['GET'])
 def ika_list():
     '''return the ika list under root'''
+    target_ika = end_point.get_ika(0)
+    # set the max page
+    if target_ika.number == 0:
+        max_page = 0
+    else:
+        max_page = (target_ika.number-1) // 20
+    # page range is [0, (target_ika.number-1)/20]
     page = int(flask.request.args.get('page', '0'))
+    if page < 0:
+        page = 0
+    elif page > max_page:
+        page = max_page
     if page < 0:
         page = 0
     ikas = end_point.get_reply(0, page*20+1, page*20+21)
@@ -43,8 +55,23 @@ def ika_post():
 @frontend.route('/ika/<int:ika_id>/')
 def ika_page(ika_id):
     '''return the spec page of ika'''
+    target_ika = end_point.get_ika(ika_id)
+    # redir to the root is no this ika
+    if not target_ika:
+        return redirect(url_for('ika_list'))
+    # redir to the forward_ika if this ika's fid is not root
+    if target_ika.forward_ika != 0:
+        return redirect(url_for('ika_page', ika_id=target_ika.forward_ika))
+    # set the max page
+    if target_ika.number == 0:
+        max_page = 0
+    else:
+        max_page = (target_ika.number-1) // 20
+    # resolve page
     page = int(flask.request.args.get('page', '0'))
     if page < 0:
         page = 0
+    elif page > max_page:
+        page = max_page
     ikas = end_point.get_reply(ika_id, page*20+1, page*20+21)
     return render('ika_page.html', ikas=ikas, page=page, ika_id=ika_id)
