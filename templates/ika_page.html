@@ -22,8 +22,8 @@ Ika institute
 {% endfor %}
 {% if page > 0 %}
 <a class="btn btn-primary" href="/ika/{{ ika_id }}?page={{ page-1 }}">上一页</a>
-{% else %}
-<a class="btn btn-primary disable" aria-disabled="true" href="#">上一页</a>
 {% endif %}
+{% if next_page %}
 <a class="btn btn-primary" href="/ika/{{ ika_id }}?page={{ page+1 }}">下一页</a>
+{% endif %}
 {% endblock %}

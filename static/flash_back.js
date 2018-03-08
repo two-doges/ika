@@ -1,2 +1,2 @@
 new Promise(resolve => setTimeout(resolve, 10000));
-history.back(-1)
+location.href = document.referrer
