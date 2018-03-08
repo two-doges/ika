@@ -32,7 +32,7 @@ def query_by_id(idd):
         cnt = int(cc[0][1])
     cur.close()
     conn.close()
-    return Ika(*re[0], cnt)
+    return Ika(*re[0][:6], cnt)
 
 
 def query_more(fa, be, en):
@@ -51,8 +51,10 @@ def query_more(fa, be, en):
         stri = 'select * from ikas where ikaid="%s"'%(fa)
         cur.execute(stri)
         re = cur.fetchall()
-        ans.append(Ika(*re[0]))
+        ans.append(Ika(*re[0][:6]))
     stri = 'select * from ikas where forward="%s"'%(fa)
+    if fa == 0:
+        stri = 'select * from ikas where forward=0 order by ordertime ASC'
     cur.execute(stri)
     re = cur.fetchall()
     if be > len(re) + 1:
@@ -65,10 +67,10 @@ def query_more(fa, be, en):
         no = 1
         en = min(en, ll+1)
         for i in range(ll-be, ll-en, -1):
-            ans.append(Ika(*re[i]))
+            ans.append(Ika(*re[i][:6]))
     else:
         for i in range(be-no, min(ll, en-1)):
-            ans.append(Ika(*re[i]))
+            ans.append(Ika(*re[i][:6]))
     return ans
 
 
@@ -83,8 +85,12 @@ def ins_ika(fid, pid, pna, com):
         res = cur.fetchall()
         if not res:
             return
-    stri = 'insert into ikas values(0,%s,'+time.strftime("%Y%m%d%H%M%S", time.localtime())+',%s,%s,%s)'
-    cur.execute(stri, (fid, int(pid), pna, com))
+    nowtime = time.strftime("%Y%m%d%H%M%S",time.localtime())
+    ordertime = ''
+    if fid ==0:
+        ordertime = nowtime
+    stri = 'insert into ikas values(0,%s,%s,%s,%s,%s,%s)'
+    cur.execute(stri, (fid, nowtime, int(pid), pna, com, ordertime))
     conn.commit()
     cur.execute('select last_insert_id();')
     re = cur.fetchall()
@@ -100,6 +106,8 @@ def ins_ika(fid, pid, pna, com):
         nu += 1
         cur.execute('update cnts set ikaid = "%s",number = "%s" where ikaid = "%s"'
         %(no, nu, no))
+        conn.commit()
+        cur.execute('update ikas set ordertime = "%s" where ikaid ="%s"' %(nowtime, no))
         conn.commit()
     cur.close()
     conn.close()

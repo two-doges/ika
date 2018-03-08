@@ -21,6 +21,7 @@ def initDatabase():
     postid  bigint unsigned,
     name varchar(12),
     comment varchar(1012),
+    ordertime varchar(14) null,
     primary key(ikaid))
     ENGINE=InnoDB DEFAULT charset=utf8;''')
     conn.close()
