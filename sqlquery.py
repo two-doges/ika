@@ -27,19 +27,6 @@ def query_by_id(id):
     return Ika(*re[0], cnt)
 
 
-'''
-def add_ika(ik):
-    conn = linkdata()
-    cur = conn.cursor()
-    sql = 'insert into ikas values(0,%s,%s,%s,%s,%s)' % (ik.forward_ika,
-     ik.post_time, ik.poster_id, ik.poster_name, ik.comment)
-    cur.execute(sql)
-    conn.commit()
-    cur.close()
-    conn.close()
-'''
-
-
 def query_more(fa, be, en):
     fa = int(fa)
     be = int(be)
@@ -68,10 +55,12 @@ def query_more(fa, be, en):
     ll = len(re)
     if fa == 0:
         no = 1
-        reversed(re)
-    #print("!!!!!"+str(fa))
-    for i in range(be-no,min(ll,en-1)):
-        ans.append(Ika(*re[i]))
+        en = min(en, ll+1)
+        for i in range(ll-be, ll-en, -1):
+            ans.append(Ika(*re[i]))
+    else:
+        for i in range(be-no, min(ll, en-1)):
+            ans.append(Ika(*re[i]))
     return ans
 
 
@@ -84,8 +73,6 @@ def ins_ika(fid, pid, pna, com):
     elif fid > 0:
         cur.execute('select * from cnts where ikaid = "%s"'%(fid))
         res = cur.fetchall()
-        #print (fid)
-        #print(res)
         if not res:
             return
     stri = 'insert into ikas values(0,%s,'+time.strftime("%Y%m%d%H%M%S", time.localtime())+',%s,%s,%s)'
@@ -96,7 +83,6 @@ def ins_ika(fid, pid, pna, com):
     no = fid
     if no == 0:
         no = int(re[0][0])
-        #print('?????')
         cur.execute('insert into cnts values("%s",1)'%(no))
         conn.commit()
     else:
@@ -112,9 +98,4 @@ def ins_ika(fid, pid, pna, com):
 
 
 if __name__ == '__main__':
-    ins_ika(0,12,'bb','123')
-    ins_ika(1,11,'aa','456')
-    ins_ika(1,1,'sss','789')
-    re = query_more(1,2,3)
-    for i in re:
-        ika_show(i)
+    print('hello')
