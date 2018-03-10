@@ -4,6 +4,7 @@
 Ika institute
 {% endblock %}
 {% block content %}
+{% if fid != 0 %}
 <div class="container">
     <form action="/ika/" method="POST">
         <input type="hidden" name="forward_id" value="{{ fid }}">
@@ -13,6 +14,7 @@ Ika institute
         <button class="btn btn-primary" type="submit">发布</button>
     </form>
 </div>
+{% endif %}
 {% for ika in ikas %}
 <div class="card">
     <div class="card-body">
