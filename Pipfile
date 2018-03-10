@@ -12,6 +12,7 @@ pymysql = "*"
 "flask-bootstrap4" = "*"
 gunicorn = "*"
 requests = "*"
+flask-sqlalchemy = "*"
 
 
 [dev-packages]

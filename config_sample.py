@@ -1,4 +1,3 @@
-port = 3306
-address = 'localhost'
-password = '123456'
-user = 'root'
+'''setting sample for application'''
+# setting for database
+DATABASE_URI = 'mysql://username:password@server/db'

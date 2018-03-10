@@ -1,11 +1,12 @@
 {% extends "frame.html" %}
+{{ super() }}
 {% block title %}
 Ika institute
 {% endblock %}
 {% block content %}
 <div class="container">
     <form action="/ika/" method="POST">
-        <input type="hidden" name="forward_id" value="0">
+        <input type="hidden" name="forward_id" value="{{ fid }}">
         <input class="form-control" name="name" type="text" placeholder="Name">
         <textarea class="form-control" name="comment" rows="5" maxlength="1000" placeholder="说些什么?"></textarea>
         <button class="btn btn-primary" type="submit">发布</button>
@@ -15,9 +16,11 @@ Ika institute
 <div class="card">
     <div class="card-body">
         <h5 class="card-title ika-id"> #{{ ika.ika_id }}</h5>
-        <h6 class="card-subtitle text-muted">{{ ika.poster_name }} #{{ ika.poster_id }} 发表于{{ ika.post_time }}</h6>
-        <p class="card text">{{ ika.comment }}</p>
+        <h6 class="card-subtitle text-muted">{{ ika.name }} #{{ ika.user_id }} 发表于{{ ika.time }}</h6>
+        <p class="card text">{{ ika.text }}</p>
+        {% if fid <= 0 %}
         <a class="btn btn-primary" href="/ika/{{ ika.ika_id }}">回应</a>
+        {% endif %}
     </div>
 </div>
 {% endfor %}
