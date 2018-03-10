@@ -2,9 +2,9 @@
 import flask
 from flask_bootstrap import Bootstrap
 from frontend import frontend
+from endpoint import app
 
 
-app = flask.Flask(__name__)
 Bootstrap(app)
 app.register_blueprint(frontend)
 
