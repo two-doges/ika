@@ -8,14 +8,15 @@ Ika institute
     <form action="/ika/" method="POST">
         <input type="hidden" name="forward_id" value="{{ fid }}">
         <input class="form-control" name="name" type="text" placeholder="Name">
-        <textarea class="form-control" name="comment" rows="5" maxlength="1000" placeholder="说些什么?"></textarea>
+        <input class="form-control" name="title" type="text" placeholder="Title">
+        <textarea class="form-control" name="comment" rows="5" maxlength="10000" placeholder="说些什么?"></textarea>
         <button class="btn btn-primary" type="submit">发布</button>
     </form>
 </div>
 {% for ika in ikas %}
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title ika-id"> #{{ ika.ika_id }}</h5>
+        <h5 class="card-title ika-id"> #{{ ika.ika_id }} {{ ika.title }}</h5>
         <h6 class="card-subtitle text-muted">{{ ika.name }} #{{ ika.user_id }} 发表于{{ ika.time }}</h6>
         <p class="card text">{{ ika.text }}</p>
         {% if fid <= 0 %}
@@ -24,10 +25,19 @@ Ika institute
     </div>
 </div>
 {% endfor %}
+{% if t is defined %}
 {% if page > 0 %}
-<a class="btn btn-primary" href="/ika?page={{ page-1 }}">上一页</a>
+<a class="btn btn-primary" href="/t/{{ t }}?page={{ page-1 }}">上一页</a>
 {% endif %}
 {% if next_page %}
-<a class="btn btn-primary" href="/ika?page={{ page+1 }}">下一页</a>
+<a class="btn btn-primary" href="/t/{{ t }}?page={{ page+1 }}">下一页</a>
+{% endif %}
+{% else %}
+{% if page > 0 %}
+<a class="btn btn-primary" href="/ika/{{ fid }}?page={{ page-1 }}">上一页</a>
+{% endif %}
+{% if next_page %}
+<a class="btn btn-primary" href="/ika/{{ fid }}?page={{ page+1 }}">下一页</a>
+{% endif %}
 {% endif %}
 {% endblock %}

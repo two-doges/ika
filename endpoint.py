@@ -3,6 +3,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import config
 import datetime
+from rando import getno
 
 
 # db init and return app
@@ -47,7 +48,7 @@ class Ika(db.Model):
     image_url = db.Column(db.String(20))
     # last reply ika id
     last_ika_id = db.Column(db.Integer)
-    # saga means lock by admin. 
+    # saga means lock by admin.
     # only ika under root can be sage
     # saga ika will not show in ika list
     # but you can still get it by url
@@ -63,7 +64,7 @@ def get_ika_number(ika_id):
     '''
     # under root
     if ika_id is 0:
-        return Ika.query.filter_by(saga=True).count()
+        return Ika.query.filter_by(saga=False).count()
     # under a ika or a topic
     return Ika.query.filter_by(forward_ika_id=ika_id).count()
 
@@ -85,12 +86,13 @@ def get_reply(fatherid, num, offset):
     '''
     # if this is a Ika
     if fatherid > 0:
-        return Ika.query.filter_by(forward_ika_id=fatherid).order_by(Ika.ika_id).limit(num).offset(offset).all()
+        # return father itself
+        return [get_ika(fatherid)] + Ika.query.filter_by(forward_ika_id=fatherid).order_by(Ika.ika_id).limit(num).offset(offset).all()
     # return all for 0 -> timeline
     if fatherid is 0:
-        return Ika.query.filter(Ika.forward_ika_id<=0).order_by(Ika.last_ika_id).limit(num).offset(offset).all()
+        return Ika.query.filter(Ika.forward_ika_id<=0).order_by(Ika.last_ika_id.desc()).limit(num).offset(offset).all()
     # elif a topic
-    return Ika.query.filter_by(forward_ika_id=fatherid).order_by(Ika.last_ika_id).limit(num).offset(offset).all()
+    return Ika.query.filter_by(forward_ika_id=fatherid).order_by(Ika.last_ika_id.desc()).limit(num).offset(offset).all()
 
 
 def new_ika(forward_ika, user_id, name, title, image_url, text):
@@ -100,6 +102,7 @@ def new_ika(forward_ika, user_id, name, title, image_url, text):
     '''
     # check if there is a forward_ika or topic
     # reply to a ika
+    forward_ika = int(forward_ika)
     if forward_ika > 0:
         f_ika = Ika.query.filter_by(ika_id=forward_ika).first()
     # a new ika under a topic
@@ -111,7 +114,11 @@ def new_ika(forward_ika, user_id, name, title, image_url, text):
     # if f_ika don't exist
     if not f_ika:
         return None
-    new_ika = Ika(
+    # resolve None
+    if not name:
+        name = '名前'
+    # create ika
+    ika = Ika(
         forward_ika_id=forward_ika,
         user_id=user_id,
         name=name,
@@ -120,18 +127,18 @@ def new_ika(forward_ika, user_id, name, title, image_url, text):
         text=text
     )
     # must commit once to get the AI id
-    db.session.add(new_ika)
+    db.session.add(ika)
     db.session.commit()
     # resolve with last reply id
-    f_ika.last_ika_id = new_ika.ika_id
-    new_ika.last_ika_id = new_ika.ika_id
+    f_ika.last_ika_id = ika.ika_id
+    ika.last_ika_id = ika.ika_id
     db.session.commit()
-    return new_ika.ika_id
+    return ika.ika_id
 
 
 def get_topic(shortcut):
     '''get topic by shortcut'''
-    return Ika_topic.query.filter_by(shortcut=shortcut).first_or_404().topic_id * -1
+    return Ika_topic.query.filter_by(shortcut=shortcut).first_or_404()
 
 
 def new_user_id():
@@ -140,3 +147,8 @@ def new_user_id():
     return int
     '''
     return getno()
+
+
+def get_topics():
+    '''get all topics'''
+    return Ika_topic.query.order_by(Ika_topic.topic_id).all()

@@ -11,7 +11,7 @@ frontend = flask.Blueprint('frontend', __name__)
 @frontend.route('/')
 def index():
     '''the index page of ika'''
-    return render('index.html')
+    return render('index.html', topics=endpoint.get_topics())
 
 
 @frontend.route('/t/<string:t>', methods=['GET'])
@@ -19,7 +19,8 @@ def ika_list(t):  # t means topic
     '''return the ika list under root'''
     # if no topic endpoint will raise 404
     topic = endpoint.get_topic(t)
-    ika_number = endpoint.get_ika_number(topic)
+    tid = topic.topic_id * -1
+    ika_number = endpoint.get_ika_number(tid)
     # set the max page
     if ika_number is 0:
         max_page = 0
@@ -34,9 +35,11 @@ def ika_list(t):  # t means topic
     if page >= max_page:
         n_p = False
         page = max_page
-    ikas = endpoint.get_reply(0, 20, page*20)
+    ikas = endpoint.get_reply(tid, 20, page*20)
+    # t means topic, again
     return render('ika_list.html',
-                  fid=topic, ikas=ikas, page=page, next_page=n_p)
+                  fid=tid, ikas=ikas, page=page, next_page=n_p,
+                  t=topic.topic_title, topics=endpoint.get_topics())
 
 
 @frontend.route('/ika/<int:ika_id>/')
@@ -69,7 +72,8 @@ def ika_page(ika_id):
         n_p = False
     ikas = endpoint.get_reply(ika_id, 20, page*20)
     return render('ika_list.html',
-                  ikas=ikas, page=page, fid=ika_id, next_page=n_p)
+                  ikas=ikas, page=page, fid=ika_id, next_page=n_p,
+                  topics=endpoint.get_topics())
 
 
 @frontend.route('/ika/', methods=['POST'])
@@ -77,13 +81,16 @@ def ika_post():
     '''post a new ika'''
     user_id = flask.request.cookies.get('user_id', '')
     if user_id == '':
-        user_id = endpoint.new_poster()
+        user_id = endpoint.new_user_id()
     forward_id = flask.request.form['forward_id']
-    poster_name = flask.request.form['name']
+    name = flask.request.form['name']
+    title = flask.request.form['title']
     comment = flask.request.form['comment']
     if not comment:
-        return render('post_error.html', error='请输入内容')
-    endpoint.new_ika(forward_id, user_id, poster_name, comment)
-    res = flask.make_response(render('post_success.html'))
+        return render('post_error.html', error='请输入内容',
+                      topics=endpoint.get_topics())
+    endpoint.new_ika(forward_id, user_id, name, title, None, comment)
+    res = flask.make_response(render('post_success.html',
+                                     topics=endpoint.get_topics()))
     res.set_cookie('user_id', str(user_id))
     return res
