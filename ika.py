@@ -1,14 +1,12 @@
 '''the main mod of ika'''
 import flask
 from flask_bootstrap import Bootstrap
-from gevent.monkey import patch_all
 from frontend import frontend
 from endpoint import app
 from endpoint import get_topics
 
 
 # monkey patch for gevent
-patch_all()
 
 Bootstrap(app)
 app.register_blueprint(frontend)
