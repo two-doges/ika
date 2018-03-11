@@ -1,12 +1,15 @@
 {% extends "frame.html" %}
-{{ super() }}
 {% block title %}
 Ika institute
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script src="{{url_for('static', filename='button_control.js')}}"></script>
 {% endblock %}
 {% block content %}
 {% if fid != 0 %}
 <div class="container">
-    <form action="/ika/" method="POST" enctype="multipart/form-data">
+    <form action="/ika/" method="POST" enctype="multipart/form-data" id="new-ika">
     <input type="hidden" name="forward_id" value="{{ fid }}">
     <div class="form-group">
         <input class="form-control" name="name" type="text" placeholder="Name">
@@ -23,7 +26,7 @@ Ika institute
                 <input type="file" class="form-control-file" name="image">
             </div>
             <div class="col-4">
-                <button class="btn btn-outline-primary" type="submit">发布</button>
+                <button class="btn btn-outline-primary" type="submit" id="submit-btn">发布</button>
             </div>
         </div>
     </div>
