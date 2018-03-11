@@ -19,7 +19,7 @@ Ika institute
 <div class="card">
     <div class="card-body">
         <h5 class="card-title ika-id"> #{{ ika.ika_id }} {{ ika.title }}</h5>
-        <h6 class="card-subtitle text-muted">{{ ika.name }} #{{ ika.user_id }} 发表于{{ ika.time }}</h6>
+        <h6 class="card-subtitle text-muted">{{ ika.name }} #{{ ika.user_id }} 发表于{{ ika.time }}(+0)</h6>
         <p class="card text">{{ ika.text }}</p>
         {% if fid <= 0 %}
         <a class="btn btn-primary" href="/ika/{{ ika.ika_id }}">回应</a>

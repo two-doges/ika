@@ -84,6 +84,7 @@ def ika_post():
     try:
         user_hash = endpoint.verify_user_id(user_id)
     except RuntimeError:
+        # get user ip (bypass nginx)
         user_id = endpoint.gen_user_id(request.remote_addr)
         user_hash = endpoint.verify_user_id(user_id)
     forward_id = request.form['forward_id']
