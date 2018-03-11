@@ -3,7 +3,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import config
 import datetime
-from rando import getno
+from user_hash import gen_user_id, verify_user_id
 
 
 # db init and return app
@@ -45,7 +45,7 @@ class Ika(db.Model):
     # post time use utc
     time = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     # image url (not must)
-    image_url = db.Column(db.String(20))
+    image_url = db.Column(db.String(100))
     # last reply ika id
     last_ika_id = db.Column(db.Integer)
     # saga means lock by admin.
@@ -139,14 +139,6 @@ def new_ika(forward_ika, user_id, name, title, image_url, text):
 def get_topic(shortcut):
     '''get topic by shortcut'''
     return Ika_topic.query.filter_by(shortcut=shortcut).first_or_404()
-
-
-def new_user_id():
-    '''
-    return a unique id for each user
-    return int
-    '''
-    return getno()
 
 
 def get_topics():
