@@ -1,13 +1,20 @@
 '''the main mod of ika'''
 import flask
 from flask_bootstrap import Bootstrap
+from gevent.monkey import patch_all
 from frontend import frontend
 from endpoint import app
 from endpoint import get_topics
 
 
+# monkey patch for gevent
+patch_all()
+
 Bootstrap(app)
 app.register_blueprint(frontend)
+# app config for image upload
+app.config['ALLOWED_EXTENSIONS'] = set(['png', 'jpg', 'jpeg', 'gif'])
+app.config['MAX_CONTENT_LENGTH'] = 4 * 1024 * 1024
 
 
 @app.errorhandler(404)

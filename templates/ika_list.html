@@ -6,40 +6,70 @@ Ika institute
 {% block content %}
 {% if fid != 0 %}
 <div class="container">
-    <form action="/ika/" method="POST">
-        <input type="hidden" name="forward_id" value="{{ fid }}">
+    <form action="/ika/" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="forward_id" value="{{ fid }}">
+    <div class="form-group">
         <input class="form-control" name="name" type="text" placeholder="Name">
+    </div>
+    <div class="form-group">
         <input class="form-control" name="title" type="text" placeholder="Title">
+    </div>
+    <div class="form-group">
         <textarea class="form-control" name="comment" rows="5" maxlength="10000" placeholder="说些什么?"></textarea>
-        <button class="btn btn-primary" type="submit">发布</button>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-">
+                <input type="file" class="form-control-file" name="image">
+            </div>
+            <div class="col-4">
+                <button class="btn btn-outline-primary" type="submit">发布</button>
+            </div>
+        </div>
+    </div>
     </form>
 </div>
 {% endif %}
+<div class="container">
+<ul class="list-group list-group-flush">
 {% for ika in ikas %}
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title ika-id"> #{{ ika.ika_id }} {{ ika.title }}</h5>
-        <h6 class="card-subtitle text-muted">{{ ika.name }} #{{ ika.user_id }} 发表于{{ ika.time }}(+0)</h6>
-        <p class="card text">{{ ika.text }}</p>
-        {% if fid <= 0 %}
-        <a class="btn btn-primary" href="/ika/{{ ika.ika_id }}">回应</a>
+<li class="list-group-item">
+<div class="container">
+    <div class="row">
+        {% if ika.image_url %}
+        <div class="col-2">
+            <a href="{{ ika.image_url }}">
+                <img src="{{ ika.image_url }}" alt="" class="img-fluid">
+            </a>
+        </div>
         {% endif %}
+        <div class="col-{{ '10' if ika.image_url else '12' }}">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1"> #{{ ika.ika_id }} {{ ika.title }}</h5>
+                <small>{{ ika.time }}</small>
+            </div>
+            <small>{{ ika.name }} #{{ ika.user_id }}</small>
+            <p class="mb-1">{{ ika.text }}</p>
+            {% if fid <= 0 %}
+            <a class="btn btn-outline-primary" href="/ika/{{ ika.ika_id }}">回应</a>
+            {% endif %}
+        </div>
     </div>
 </div>
+</li>
 {% endfor %}
-{% if t is defined %}
-{% if page > 0 %}
-<a class="btn btn-primary" href="/t/{{ t }}?page={{ page-1 }}">上一页</a>
-{% endif %}
-{% if next_page %}
-<a class="btn btn-primary" href="/t/{{ t }}?page={{ page+1 }}">下一页</a>
-{% endif %}
-{% else %}
-{% if page > 0 %}
-<a class="btn btn-primary" href="/ika/{{ fid }}?page={{ page-1 }}">上一页</a>
-{% endif %}
-{% if next_page %}
-<a class="btn btn-primary" href="/ika/{{ fid }}?page={{ page+1 }}">下一页</a>
-{% endif %}
-{% endif %}
+</ul>
+</div>
+<div class="container">
+<nav>
+    <ul class="pagination">
+        <li class="page-item {{ 'disabled' if not l_p }}">
+            <a class="page-link" href="{{ l_p if l_p else '#' }}">上一页</a>
+        </li>
+        <li class="page-item {{ 'disabled' if not l_p }}">
+            <a class="page-link" href="{{ n_p if n_p else '#' }}">下一页</a>
+        </li>
+    </ul>
+</nav>
+</div>
 {% endblock %}

@@ -45,7 +45,7 @@ class Ika(db.Model):
     # post time use utc
     time = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     # image url (not must)
-    image_url = db.Column(db.String(20))
+    image_url = db.Column(db.String(100))
     # last reply ika id
     last_ika_id = db.Column(db.Integer)
     # saga means lock by admin.
