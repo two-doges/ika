@@ -13,6 +13,7 @@ pymysql = "*"
 gunicorn = "*"
 requests = "*"
 flask-sqlalchemy = "*"
+pycryptodome = "*"
 
 
 [dev-packages]

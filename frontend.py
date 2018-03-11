@@ -1,7 +1,8 @@
 '''the front-end blueprint'''
+import datetime
 import flask
 from flask import render_template as render
-from flask import url_for, redirect
+from flask import url_for, redirect, request
 import endpoint
 
 
@@ -80,17 +81,25 @@ def ika_page(ika_id):
 def ika_post():
     '''post a new ika'''
     user_id = flask.request.cookies.get('user_id', '')
-    if user_id == '':
-        user_id = endpoint.new_user_id()
-    forward_id = flask.request.form['forward_id']
-    name = flask.request.form['name']
-    title = flask.request.form['title']
-    comment = flask.request.form['comment']
+    try:
+        user_hash = endpoint.verify_user_id(user_id)
+    except RuntimeError:
+        user_id = endpoint.gen_user_id(request.remote_addr)
+        user_hash = endpoint.verify_user_id(user_id)
+    forward_id = request.form['forward_id']
+    name = request.form['name']
+    title = request.form['title']
+    comment = request.form['comment']
     if not comment:
         return render('post_error.html', error='请输入内容',
                       topics=endpoint.get_topics())
-    endpoint.new_ika(forward_id, user_id, name, title, None, comment)
+    try:
+        endpoint.new_ika(forward_id, user_hash, name, title, None, comment)
+    except RuntimeError as err:
+        return render('post_error.html', error=err,
+                      topics=endpoint.get_topics())
     res = flask.make_response(render('post_success.html',
                                      topics=endpoint.get_topics()))
-    res.set_cookie('user_id', str(user_id))
+    outdate = datetime.datetime.today() + datetime.timedelta(days=30)
+    res.set_cookie('user_id', user_id, expires=outdate)
     return res

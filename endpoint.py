@@ -3,7 +3,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import config
 import datetime
-from rando import getno
+from user_hash import gen_user_id, verify_user_id
 
 
 # db init and return app
@@ -139,14 +139,6 @@ def new_ika(forward_ika, user_id, name, title, image_url, text):
 def get_topic(shortcut):
     '''get topic by shortcut'''
     return Ika_topic.query.filter_by(shortcut=shortcut).first_or_404()
-
-
-def new_user_id():
-    '''
-    return a unique id for each user
-    return int
-    '''
-    return getno()
 
 
 def get_topics():
