@@ -92,17 +92,13 @@ def ika_post():
         # get user ip (bypass nginx)
         user_id = endpoint.gen_user_id(request.remote_addr)
         user_hash = endpoint.verify_user_id(user_id)
-    forward_id = request.form['forward_id']
-    name = request.form['name']
-    title = request.form['title']
-    comment = request.form['comment']
+    forward_id = request.form.get('forward_id')
+    name = request.form.get('name')
+    title = request.form.get('title')
+    comment = request.form.get('comment')
     # resolve with image
-    try:
-        image = request.files['image']
-    except flask.app.BadRequest:
-        image = None
-    else:
-        print(image)
+    image = request.files.get('image')
+    if image:
         url = 'https://sm.ms/api/upload'
         res = post(url, files={'smfile': image})
         if res.json()['code'] == 'success':
