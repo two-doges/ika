@@ -19,8 +19,9 @@ app.config['SQLALCHEMY_POOL_TIMEOUT'] = 20
 
 
 @app.errorhandler(404)
-def page_not_found(err):
+def page_not_found(err=None):
     '''page not found'''
+    print(err)
     return flask.render_template('404.html', topics=get_topics()), 404
 
 
