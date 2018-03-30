@@ -1,6 +1,10 @@
 {% extends "bootstrap/base.html" %}
 {% import "bootstrap/utils.html" as utils %}
 {% block html_attribs %} lang="zh-CN"{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}" />
+{% endblock %}
 {% block title %}Ika institute{% endblock %}
 {% block navbar %}
 <nav class="nav navbar-expand-lg navbar-light bg-light">
