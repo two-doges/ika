@@ -30,3 +30,7 @@
 {% endblock %}
 {% block content %}
 {% endblock content %}
+{% block scripts %}
+{{ super() }}
+<script src="{{url_for('static', filename='service-worker.js')}}"></script>
+{% endblock %}

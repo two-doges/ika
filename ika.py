@@ -25,5 +25,11 @@ def page_not_found(err=None):
     return flask.render_template('404.html', topics=get_topics()), 404
 
 
+@app.route('/service-worker.js')
+def service_worker():
+    '''service worker'''
+    return app.send_static_file('service-worker.js')
+
+
 if __name__ == '__main__':
     app.run(debug=True)
