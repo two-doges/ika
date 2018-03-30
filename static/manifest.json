@@ -2,7 +2,7 @@
     "short_name": "Ika Ins",
     "name": "Ika institute",
     "icons": [{
-        "src": "static/2018-03-30_Ika_ins.png",
+        "src": "/static/2018-03-30_Ika_ins.png",
         "sizes": "256x256",
         "type": "image/png"
     }]
