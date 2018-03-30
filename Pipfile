@@ -7,12 +7,12 @@ name = "pypi"
 
 [packages]
 
-flask = "*"
-pymysql = "*"
-"flask-bootstrap4" = "*"
+Flask = "*"
+PyMySQL = "*"
+"Flask-Bootstrap4" = "*"
 gunicorn = "*"
 requests = "*"
-flask-sqlalchemy = "*"
+Flask-SQLAlchemy = "*"
 pycryptodome = "*"
 gevent = "*"
 
