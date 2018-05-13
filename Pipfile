@@ -20,4 +20,3 @@ gevent = "*"
 [dev-packages]
 
 neovim = "*"
-jedi = "*"
